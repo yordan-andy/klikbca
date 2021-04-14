@@ -17,8 +17,14 @@ from selenium.webdriver.support.ui import Select
 from bs4 import BeautifulSoup
 from webdriver_manager.chrome import ChromeDriverManager
 
+import sys
+import logging
+
 # initiate object flask
 app = Flask(__name__)
+
+app.logger.addHandler(logging.StreamHandler(sys.stdout))
+app.logger.setLevel(logging.ERROR)
 
 # initiate object flask_restful
 api = Api(app)
