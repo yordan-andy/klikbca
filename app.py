@@ -16,6 +16,7 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import Select
 from bs4 import BeautifulSoup
 from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.utils import ChromeType
 
 import sys
 import logging
@@ -56,7 +57,7 @@ class ContohResource(Resource):
         opts = webdriver.ChromeOptions()
         opts.headless = True
         self.__driver = webdriver.Chrome(
-            ChromeDriverManager().install(), options=opts)
+            ChromeDriverManager(chrome_type=ChromeType.GOOGLE).install(), options=opts)
         self.__driver.wait = WebDriverWait(self.__driver, 3)
 
         try:
