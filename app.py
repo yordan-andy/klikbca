@@ -1,5 +1,5 @@
 # import Library
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
 from flask_cors import CORS
 
@@ -20,6 +20,7 @@ from webdriver_manager.utils import ChromeType
 
 import sys
 import logging
+import datetime
 
 # initiate object flask
 app = Flask(__name__)
@@ -41,7 +42,7 @@ class ContohResource(Resource):
 
     def get(self):
         # response = {"message": "Hello World"}
-        return identitas
+        return "REST API BCA"
 
     def post(self):
         username = request.form["username"]
@@ -80,11 +81,23 @@ class ContohResource(Resource):
             except:
                 alert = self.__driver.switch_to.alert()
                 # return alert.text
-                return {"message": "Login gagal 1"}
+                # return {"message": "Login gagal 1"}
+                return (jsonify({
+                    'code': 400,
+                    'success': 'false',
+                    'message': 'balance check failed',
+                    'data': {}
+                }))
                 alert.accept()
 
         except:
-            return {"message": "Login gagal 2"}
+            # return {"message": "Login gagal 2"}
+            return (jsonify({
+                'code': 400,
+                'success': 'false',
+                'message': 'login failed',
+                'data': {}
+            }))
 
     def cekSaldo(self):
         try:
@@ -104,9 +117,23 @@ class ContohResource(Resource):
             # print(("Saldo BCA saat ini adalah %s" % saldo))
             self.__driver.switch_to.default_content()
             self.logout()
-            return {"message": "Saldo BCA saat ini adalah %s" % saldo}
+            return (jsonify({
+                'code': 200,
+                'success': 'true',
+                'message': 'data found',
+                'data': {
+                    'balance': '%s' % saldo,
+                    'timestamp': '%s' % datetime.datetime.now()
+                }
+            }))
         except TimeoutException:
-            return {"message": "Session timeout. please login again"}
+            # return {"message": "Session timeout. please login again"}
+            return (jsonify({
+                'code': 400,
+                'success': 'false',
+                'message': 'session timeout',
+                'data': {}
+            }))
 
     def logout(self):
         try:
